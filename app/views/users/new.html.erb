@@ -1,2 +1,22 @@
-<h1>Users#new</h1>
-<p>Find me in app/views/users/new.html.erb</p>
+<div class="container" div align="center">
+  <h1>Users#new</h1>
+      <p>Find me in app/views/users/new.html.erb</p>
+
+      <%= form_for @user do |f| %>
+           <div>
+          <%= f.text_field :first_name, placeholder:"name" %>
+          </div>
+
+          <div>
+          <%= f.text_field :email, placeholder:"email" %>
+          </div>
+          <div>
+            <%= f.text_field :password, placeholder:"password" %>
+          </div>
+          <div>
+            <%= f.text_field :password_confirmation, placeholder:"password confirmation" %>
+          </div>
+          <div>
+            <%= f.submit %>
+          </div>
+      <% end %>
