@@ -1,3 +1,33 @@
 // Place all the styles related to the sessions controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+#sketch {
+  border: 10px solid gray;
+
+ /* position: relative;*/
+/* z-index:20;*/
+ z-index: 9900;
+  position:absolute;
+ /* top:70px;*/
+  left:0;
+}
+
+#tmp_canvas {
+  position: absolute;
+  left: 0px; right: 0;
+  bottom: 0; top: 0;
+  cursor: crosshair;
+}
+
+.background_pattern {
+  position:absolute;
+  top:70px;
+  left:0;
+  width: 100%;
+  z-index: 0;
+}
