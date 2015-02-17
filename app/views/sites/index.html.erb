@@ -1,27 +1,24 @@
-<h1>Sites#index</h1>
-<p>Find me in app/views/sites/index.html.erb</p>
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Canvas</title>
+  <head>
+    <title>Create HTML5 Canvas JavaScript Paint Bucket Example</title>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+    <!--[if IE]><script type="text/javascript" src="excanvas.js"></script><![endif]-->
+  </head>
   
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-</head>
-<body>
-  <div class="container">
-    <div class="background_pattern" width="200" height="200">
-      <%= image_tag("isPattern.png") %>
-     </div>
+  <body>
+    <div class="container">
+        <!-- <div class="col-xs-12 col-md-2">  -->
+        <input type="color" id="color" onchange="setColor(value)" />
+      <!--   </div> -->
 
-  <div id="sketch">
-    <canvas id="paint" width="1419" height="1399">
-    </canvas>
-  </div>
-</div>
-
-
-
-<script src="canvas.js"></script>
-</body>
+    <!-- <div class= "col-xs-12 col-md-10"> -->
+      <div id="canvasDiv"></div>
+   <!--  </div> -->
+  
+    
+    </div>
+  </body>
 </html>

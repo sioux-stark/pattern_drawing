@@ -1,105 +1,310 @@
-$(function() {
-  
-  var canvas = document.querySelector('#paint');
-  var ctx = canvas.getContext('2d');
-  
-  var sketch = document.querySelector('#sketch');
-  var sketch_style = getComputedStyle(sketch);
-  canvas.width = parseInt(sketch_style.getPropertyValue('width'));
-  canvas.height = parseInt(sketch_style.getPropertyValue('height'));
-  
-  
-  // Creating a tmp canvas
-  var tmp_canvas = document.createElement('canvas');
-  var tmp_ctx = tmp_canvas.getContext('2d');
-  tmp_canvas.id = 'tmp_canvas';
-  tmp_canvas.width = canvas.width;
-  tmp_canvas.height = canvas.height;
-  
-  sketch.appendChild(tmp_canvas);
+console.log("This canvas.js.erb file is being loaded by rails...");
 
-  var mouse = {x: 0, y: 0};
-  var last_mouse = {x: 0, y: 0};
-  
-  // Pencil Points
-  var ppts = [];
-  
-  /* Mouse Capturing Work */
-  tmp_canvas.addEventListener('mousemove', function(e) {
-    mouse.x = typeof e.offsetX !== 'undefined' ? e.offsetX : e.layerX;
-    mouse.y = typeof e.offsetY !== 'undefined' ? e.offsetY : e.layerY;
-  }, false);
-  
-  
-  /* Drawing on Paint App */
-  tmp_ctx.lineWidth = 40;
-  tmp_ctx.lineJoin = 'round';
-  tmp_ctx.lineCap = 'round';
-  tmp_ctx.strokeStyle = 'blue';
-  tmp_ctx.fillStyle = 'blue';
-  
-  tmp_canvas.addEventListener('mousedown', function(e) {
-    tmp_canvas.addEventListener('mousemove', onPaint, false);
-    
-    mouse.x = typeof e.offsetX !== 'undefined' ? e.offsetX : e.layerX;
-    mouse.y = typeof e.offsetY !== 'undefined' ? e.offsetY : e.layerY;
-    
-    ppts.push({x: mouse.x, y: mouse.y});
-    
-    onPaint();
-  }, false);
-  
-  tmp_canvas.addEventListener('mouseup', function() {
-    tmp_canvas.removeEventListener('mousemove', onPaint, false);
-    
-    // Writing down to real canvas now
-    ctx.drawImage(tmp_canvas, 0, 0);
-    // Clearing tmp canvas
-    tmp_ctx.clearRect(0, 0, tmp_canvas.width, tmp_canvas.height);
-    
-    // Emptying up Pencil Points
-    ppts = [];
-  }, false);
-  
-  var onPaint = function() {
-    
-    // Saving all the points in an array
-    ppts.push({x: mouse.x, y: mouse.y});
-    
-    if (ppts.length < 3) {
-      var b = ppts[0];
-      tmp_ctx.beginPath();
-      //ctx.moveTo(b.x, b.y);
-      //ctx.lineTo(b.x+50, b.y+50);
-      tmp_ctx.arc(b.x, b.y, tmp_ctx.lineWidth / 2, 0, Math.PI * 2, !0);
-      tmp_ctx.fill();
-      tmp_ctx.closePath();
-      
-      return;
+// $(document).ready(function() {
+//   $("#canvas").click(function(e) {
+//     alert("Clicked");
+//   });
+// });
+
+var curColor = {
+      r: 25,
+      g: 25,
+      b: 25
     }
+var paintBucketApp = (function () {
+
+  "use strict";
+
+  var canvasWidth = 500,
+    canvasHeight = 500, 
+    outlineImage = new Image(),
+    swatchImage = new Image(),
+    backgroundImage = new Image(),
+    swatchStartX = 50,
+    swatchStartY = 19,
+    swatchImageWidth = 93,
+    swatchImageHeight = 46,
+    drawingAreaX = 150,
+    drawingAreaY = 30,
+    drawingAreaWidth = 700,
+    drawingAreaHeight = 400,
+    colorLayerData,
+    outlineLayerData,
+    totalLoadResources = 3,
+    curLoadResNum = 0,
+
+    // clearCanvas = function () {
+
+    //   context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+    // },
+
+
+    drawColorSwatch = function (color, x, y) {
+
+      context.beginPath();
+      context.arc(x + 46, y + 23, 18, 0, Math.PI * 2, true);
+      context.closePath();
+      context.fillStyle = "white";
+      context.fill();
+
+      if (curColor === color) {
+        context.drawImage(swatchImage, 0, 0, 59, swatchImageHeight, x, y, 59, swatchImageHeight);
+      } else {
+        context.drawImage(swatchImage, x, y, swatchImageWidth, swatchImageHeight);
+      }
+    },
+
+ 
+    redraw = function () {
+
+      var locX,
+        locY;
+
+      // Make sure required resources are loaded before redrawing
+      if (curLoadResNum < totalLoadResources) {
+        return;
+      }
+
+      // clearCanvas();
+
+      // Draw the current state of the color layer to the canvas
+      context.putImageData(colorLayerData, 0, 0);
+
+      // Draw the background
+      context.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
+
+
+      // Draw the outline image on top of everything. We could move this to a separate 
+      //   canvas so we did not have to redraw this everytime.
+      context.drawImage(outlineImage, drawingAreaX, drawingAreaY, drawingAreaWidth, drawingAreaHeight);
+    },
+
+    matchOutlineColor = function (r, g, b, a) {
+
+      return (r + g + b < 100 && a === 255);
+    },
+
+    matchStartColor = function (pixelPos, startR, startG, startB) {
+
+      var r = outlineLayerData.data[pixelPos],
+        g = outlineLayerData.data[pixelPos + 1],
+        b = outlineLayerData.data[pixelPos + 2],
+        a = outlineLayerData.data[pixelPos + 3];
+
+      // If current pixel of the outline image is black
+      if (matchOutlineColor(r, g, b, a)) {
+        return false;
+      }
+
+      r = colorLayerData.data[pixelPos];
+      g = colorLayerData.data[pixelPos + 1];
+      b = colorLayerData.data[pixelPos + 2];
+
+      // If the current pixel matches the clicked color
+      if (r === startR && g === startG && b === startB) {
+        return true;
+      }
+
+      // If current pixel matches the new color
+      if (r === curColor.r && g === curColor.g && b === curColor.b) {
+        return false;
+      }
+
+      return true;
+    },
+
+    colorPixel = function (pixelPos, r, g, b, a) {
+
+      colorLayerData.data[pixelPos] = r;
+      colorLayerData.data[pixelPos + 1] = g;
+      colorLayerData.data[pixelPos + 2] = b;
+      colorLayerData.data[pixelPos + 3] = a !== undefined ? a : 255;
+    },
+
+    floodFill = function (startX, startY, startR, startG, startB) {
+
+      var newPos,
+        x,
+        y,
+        pixelPos,
+        reachLeft,
+        reachRight,
+        drawingBoundLeft = drawingAreaX,
+        drawingBoundTop = drawingAreaY,
+        drawingBoundRight = drawingAreaX + drawingAreaWidth - 1,
+        drawingBoundBottom = drawingAreaY + drawingAreaHeight - 1,
+        pixelStack = [[startX, startY]];
+
+      while (pixelStack.length) {
+
+        newPos = pixelStack.pop();
+        x = newPos[0];
+        y = newPos[1];
+
+        // Get current pixel position
+        pixelPos = (y * canvasWidth + x) * 4;
+
+        // Go up as long as the color matches and are inside the canvas
+        while (y >= drawingBoundTop && matchStartColor(pixelPos, startR, startG, startB)) {
+          y -= 1;
+          pixelPos -= canvasWidth * 4;
+        }
+
+        pixelPos += canvasWidth * 4;
+        y += 1;
+        reachLeft = false;
+        reachRight = false;
+
+        // Go down as long as the color matches and in inside the canvas
+        while (y <= drawingBoundBottom && matchStartColor(pixelPos, startR, startG, startB)) {
+          y += 1;
+
+          colorPixel(pixelPos, curColor.r, curColor.g, curColor.b);
+
+          if (x > drawingBoundLeft) {
+            if (matchStartColor(pixelPos - 4, startR, startG, startB)) {
+              if (!reachLeft) {
+                // Add pixel to stack
+                pixelStack.push([x - 1, y]);
+                reachLeft = true;
+              }
+            } else if (reachLeft) {
+              reachLeft = false;
+            }
+          }
+
+          if (x < drawingBoundRight) {
+            if (matchStartColor(pixelPos + 4, startR, startG, startB)) {
+              if (!reachRight) {
+                // Add pixel to stack
+                pixelStack.push([x + 1, y]);
+                reachRight = true;
+              }
+            } else if (reachRight) {
+              reachRight = false;
+            }
+          }
+
+          pixelPos += canvasWidth * 4;
+        }
+      }
+    },
+
+    // Start painting with paint bucket tool starting from pixel specified by startX and startY
+    paintAt = function (startX, startY) {
+
+      var pixelPos = (startY * canvasWidth + startX) * 4,
+        r = colorLayerData.data[pixelPos],
+        g = colorLayerData.data[pixelPos + 1],
+        b = colorLayerData.data[pixelPos + 2],
+        a = colorLayerData.data[pixelPos + 3];
+
+      if (r === curColor.r && g === curColor.g && b === curColor.b) {
+        // Return because trying to fill with the same color
+        return;
+      }
+
+      if (matchOutlineColor(r, g, b, a)) {
+        // Return because clicked outline
+        return;
+      }
+
+      floodFill(startX, startY, r, g, b);
+
+      redraw();
+    },
+
+  
+
+    // Add mouse event
+    createMouseEvents = function () {
+
+      $('#canvas').mousedown(function (e) {
+        // Mouse down location
+        var mouseX = e.pageX - this.offsetLeft,
+          mouseY = e.pageY - this.offsetTop;
+
+        if (mouseX < drawingAreaX) { // Left of the drawing area
+          if (mouseX > swatchStartX) {
+            if (mouseY > swatchStartY && mouseY < swatchStartY + swatchImageHeight) {
+              curColor = colorPurple;
+              redraw();
+            }
+          }
+        } else if ((mouseY > drawingAreaY && mouseY < drawingAreaY + drawingAreaHeight) && (mouseX <= drawingAreaX + drawingAreaWidth)) {
+          // Mouse click location on drawing area
+          paintAt(mouseX, mouseY);
+        }
+      });
+    },
+
     
-    // Tmp canvas is always cleared up before drawing.
-    tmp_ctx.clearRect(0, 0, tmp_canvas.width, tmp_canvas.height);
-    
-    tmp_ctx.beginPath();
-    tmp_ctx.moveTo(ppts[0].x, ppts[0].y);
-    
-    for (var i = 1; i < ppts.length - 2; i++) {
-      var c = (ppts[i].x + ppts[i + 1].x) / 2;
-      var d = (ppts[i].y + ppts[i + 1].y) / 2;
-      
-      tmp_ctx.quadraticCurveTo(ppts[i].x, ppts[i].y, c, d);
-    }
-    
-    // For the last 2 points
-    tmp_ctx.quadraticCurveTo(
-      ppts[i].x,
-      ppts[i].y,
-      ppts[i + 1].x,
-      ppts[i + 1].y
-    );
-    tmp_ctx.stroke();
-    
+
+    // Calls the redraw function after all neccessary resources are loaded.
+    resourceLoaded = function () {
+
+      curLoadResNum += 1;
+      if (curLoadResNum === totalLoadResources) {
+        createMouseEvents();
+        redraw();
+      }
+    },
+
+    // Creates a canvas element, loads images, adds events, and draws the canvas for the first time
+    init = function () {
+      //debugger;
+
+      var canvas = document.createElement('canvas');
+      canvas.setAttribute('width', canvasWidth);
+      canvas.setAttribute('height', canvasHeight);
+      canvas.setAttribute('id', 'canvas');
+      document.getElementById('canvasDiv').appendChild(canvas);
+
+      if (typeof G_vmlCanvasManager !== "undefined") {
+        canvas = G_vmlCanvasManager.initElement(canvas);
+      }
+      var context = canvas.getContext("2d"); // Grab the 2d canvas context
+
+      console.log("Context:", context);
+    //   var ctx = context;
+    //       ctx.beginPath();
+    // // ctx.moveTo(75,50);
+    // // ctx.lineTo(100,75);
+    // // ctx.lineTo(100,25);
+    // ctx.fill();
+
+      // Load images
+      backgroundImage.onload = resourceLoaded;
+      backgroundImage.src = '/assets/images/background02.png';
+
+      swatchImage.onload = resourceLoaded;
+      swatchImage.src = '/assets/images/paint-outline.png';
+
+      outlineImage.onload = function () {
+        context.drawImage(outlineImage, drawingAreaX, drawingAreaY, drawingAreaWidth, drawingAreaHeight);
+          // Test for cross origin security error (SECURITY_ERR: DOM Exception 18)
+        try {
+          outlineLayerData = context.getImageData(0, 0, canvasWidth, canvasHeight);
+        } catch (ex) {
+          window.alert("Application cannot be run locally. Please run on a server.");
+          return;
+        }
+        // clearCanvas();
+        colorLayerData = context.getImageData(0, 0, canvasWidth, canvasHeight);
+        resourceLoaded();
+      };
+      outlineImage.src = '/assets/images/lattice11.png';
+    };
+
+  return {
+    init: init
   };
-  
-});
+}());
+
+  setColor= function (value) {
+    var color = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(value);
+    curColor.r = parseInt(color[1], 16);
+    curColor.g = parseInt(color[2], 16);
+    curColor.b = parseInt(color[3], 16);
+    
+    };
