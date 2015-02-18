@@ -1,9 +1,4 @@
 
-
-
-
-console.log("This canvas.js.erb file is being loaded by rails...");
-
 var curColor = {
       r: 25,
       g: 25,
@@ -14,8 +9,8 @@ var paintBucketApp = (function () {
   "use strict";
 
   var context,
-    canvasWidth = 800,
-    canvasHeight = 1096,
+    canvasWidth = 700,
+    canvasHeight = 700,
 
     
     outlineImage = new Image(),
@@ -28,7 +23,7 @@ var paintBucketApp = (function () {
     drawingAreaX = 70,
     drawingAreaY = 20,
     drawingAreaWidth = 700,
-    drawingAreaHeight = 1000,
+    drawingAreaHeight = 500,
     colorLayerData,
     outlineLayerData,
     totalLoadResources = 3,
@@ -296,7 +291,7 @@ var paintBucketApp = (function () {
         colorLayerData = context.getImageData(0, 0, canvasWidth, canvasHeight);
         resourceLoaded();
       };
-      outlineImage.src = "/assets/lattice12.png";
+      outlineImage.src = "/assets/lattice15.png";
     };
 
   return {
