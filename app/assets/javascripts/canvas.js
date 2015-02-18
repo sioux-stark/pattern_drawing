@@ -10,7 +10,7 @@ var paintBucketApp = (function () {
 
   var context,
     canvasWidth = 700,
-    canvasHeight = 700,
+    canvasHeight = 550,
 
     
     outlineImage = new Image(),
