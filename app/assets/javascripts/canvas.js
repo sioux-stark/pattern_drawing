@@ -15,8 +15,8 @@ var paintBucketApp = (function () {
 
   "use strict";
 
-  var canvasWidth = 500,
-    canvasHeight = 500, 
+  var canvasWidth = 1,
+    canvasHeight = 1, 
     outlineImage = new Image(),
     swatchImage = new Image(),
     backgroundImage = new Image(),
@@ -26,8 +26,8 @@ var paintBucketApp = (function () {
     swatchImageHeight = 46,
     drawingAreaX = 150,
     drawingAreaY = 30,
-    drawingAreaWidth = 700,
-    drawingAreaHeight = 400,
+    drawingAreaWidth = 0,
+    drawingAreaHeight = 0,
     colorLayerData,
     outlineLayerData,
     totalLoadResources = 3,

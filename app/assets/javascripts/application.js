@@ -30,7 +30,7 @@ var paintBucketApp = (function () {
   "use strict";
 
   var context,
-    canvasWidth = 2000,
+    canvasWidth = 800,
     canvasHeight = 1096,
 
     
@@ -41,7 +41,7 @@ var paintBucketApp = (function () {
     swatchStartY = 19,
     swatchImageWidth = 93,
     swatchImageHeight = 46,
-    drawingAreaX = 150,
+    drawingAreaX = 90,
     drawingAreaY = 30,
     drawingAreaWidth = 700,
     drawingAreaHeight = 400,
