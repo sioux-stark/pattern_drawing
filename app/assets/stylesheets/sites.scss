@@ -1,3 +1,29 @@
 // Place all the styles related to the sites controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+#home_look{
+  background:url(background05.png) no-repeat center center fixed;
+  background-size: cover;
+  height:100%;
+  width:100%;
+  padding-top: 10px;
+  padding-left: 30px;
+
+}
+
+.navbar-inverse{
+  background-color: rgb(236, 240, 241);
+  border:none;
+  min-height: 50px;
+  border-radius:0px;
+
+}
+
+#canvasDiv{
+  background-color:white;
+
+}
+
+.navbar {
+  margin-bottom: 0px;
+}
