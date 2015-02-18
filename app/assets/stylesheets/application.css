@@ -10,6 +10,24 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
+ *= require bootstrap-3.2.0.min.css
  *= require_tree .
  *= require_self
+ 
  */
+
+body{
+  background:url(background05.png) no-repeat center center fixed;
+  background-size: cover;
+  height:100%;
+  width:100%;
+
+}
+
+.navbar-inverse{
+  background-color: rgb(236, 240, 241);
+  border:none;
+  min-height: 50px;
+  border-radius:0px;
+
+}
