@@ -1,10 +1,8 @@
-console.log("This canvas.js.erb file is being loaded by rails...");
 
-// $(document).ready(function() {
-//   $("#canvas").click(function(e) {
-//     alert("Clicked");
-//   });
-// });
+
+
+
+console.log("This canvas.js.erb file is being loaded by rails...");
 
 var curColor = {
       r: 25,
@@ -15,8 +13,11 @@ var paintBucketApp = (function () {
 
   "use strict";
 
-  var canvasWidth = 1,
-    canvasHeight = 1, 
+  var context,
+    canvasWidth = 800,
+    canvasHeight = 1096,
+
+    
     outlineImage = new Image(),
     swatchImage = new Image(),
     backgroundImage = new Image(),
@@ -24,21 +25,22 @@ var paintBucketApp = (function () {
     swatchStartY = 19,
     swatchImageWidth = 93,
     swatchImageHeight = 46,
-    drawingAreaX = 150,
-    drawingAreaY = 30,
-    drawingAreaWidth = 0,
-    drawingAreaHeight = 0,
+    drawingAreaX = 70,
+    drawingAreaY = 20,
+    drawingAreaWidth = 700,
+    drawingAreaHeight = 1000,
     colorLayerData,
     outlineLayerData,
     totalLoadResources = 3,
     curLoadResNum = 0,
 
+    // Clears the canvas.
     // clearCanvas = function () {
 
-    //   context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+    //  context.clearRect(0, 0, context.canvas.width, context.canvas.height);
     // },
 
-
+    // Draw a color swatch
     drawColorSwatch = function (color, x, y) {
 
       context.beginPath();
@@ -54,7 +56,7 @@ var paintBucketApp = (function () {
       }
     },
 
- 
+    // Draw the elements on the canvas
     redraw = function () {
 
       var locX,
@@ -216,7 +218,7 @@ var paintBucketApp = (function () {
 
   
 
-    // Add mouse event
+    // Add mouse event listeners to the canvas
     createMouseEvents = function () {
 
       $('#canvas').mousedown(function (e) {
@@ -238,8 +240,6 @@ var paintBucketApp = (function () {
       });
     },
 
-    
-
     // Calls the redraw function after all neccessary resources are loaded.
     resourceLoaded = function () {
 
@@ -250,10 +250,16 @@ var paintBucketApp = (function () {
       }
     },
 
-    // Creates a canvas element, loads images, adds events, and draws the canvas for the first time
+    // Creates a canvas element, loads images, adds events, and draws the canvas for the first time.
     init = function () {
-      //debugger;
-
+      console.log("working");
+      
+      // var oldCanvas= document.getElementById('canvas')
+      // console.log("oldCanvas", oldCanvas);
+      // if (oldCanvas){
+      //  oldCanvas.remove();
+      // };
+      // Create the canvas (Neccessary for IE because it doesn't know what a canvas element is)
       var canvas = document.createElement('canvas');
       canvas.setAttribute('width', canvasWidth);
       canvas.setAttribute('height', canvasHeight);
@@ -263,26 +269,23 @@ var paintBucketApp = (function () {
       if (typeof G_vmlCanvasManager !== "undefined") {
         canvas = G_vmlCanvasManager.initElement(canvas);
       }
-      var context = canvas.getContext("2d"); // Grab the 2d canvas context
-
+      context = canvas.getContext("2d"); // Grab the 2d canvas context
       console.log("Context:", context);
-    //   var ctx = context;
-    //       ctx.beginPath();
-    // // ctx.moveTo(75,50);
-    // // ctx.lineTo(100,75);
-    // // ctx.lineTo(100,25);
-    // ctx.fill();
+      // Note: The above code is a workaround for IE 8 and lower. Otherwise we could have used:
+      //     context = document.getElementById('canvas').getContext("2d");
+
 
       // Load images
       backgroundImage.onload = resourceLoaded;
-      backgroundImage.src = '/assets/images/background02.png';
+      backgroundImage.src = "/assets/background02.png";
 
       swatchImage.onload = resourceLoaded;
-      swatchImage.src = '/assets/images/paint-outline.png';
+      swatchImage.src = "/assets/paint-outline.png";
 
       outlineImage.onload = function () {
         context.drawImage(outlineImage, drawingAreaX, drawingAreaY, drawingAreaWidth, drawingAreaHeight);
-          // Test for cross origin security error (SECURITY_ERR: DOM Exception 18)
+
+        // Test for cross origin security error (SECURITY_ERR: DOM Exception 18)
         try {
           outlineLayerData = context.getImageData(0, 0, canvasWidth, canvasHeight);
         } catch (ex) {
@@ -293,7 +296,7 @@ var paintBucketApp = (function () {
         colorLayerData = context.getImageData(0, 0, canvasWidth, canvasHeight);
         resourceLoaded();
       };
-      outlineImage.src = '/assets/images/lattice11.png';
+      outlineImage.src = "/assets/lattice12.png";
     };
 
   return {
@@ -308,3 +311,28 @@ var paintBucketApp = (function () {
     curColor.b = parseInt(color[3], 16);
     
     };
+
+
+    $(document).ready(function () {
+       paintBucketApp.init();
+
+       $('#save').on('click', function(){
+          var canvas = document.getElementById("canvas");
+          var dataURL = canvas.toDataURL();
+          console.log(dataURL);
+          $.ajax({
+          url: "/drawings.json",
+          data: {
+            drawing: dataURL
+          },
+          type: "POST",
+          success: function(){
+            window.location = '/drawings'
+          }
+        });
+      });
+
+    });
+
+
+    

@@ -9,8 +9,9 @@ Rails.application.routes.draw do
   get "/sign_up", to: "users#new", as: "sign_up"
 
   resources :users
+  get "/drawings", to: "drawings#index"
 
-
+post "/drawings", to: "drawings#create"
 
  get "/sign_up", to: "users#new"
  get "/login", to: "sessions#new"
