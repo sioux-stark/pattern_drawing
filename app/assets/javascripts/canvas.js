@@ -9,8 +9,8 @@ var paintBucketApp = (function () {
   "use strict";
 
   var context,
-    canvasWidth = 700,
-    canvasHeight = 550,
+    canvasWidth = 800,
+    canvasHeight = 516,
 
     
     outlineImage = new Image(),
@@ -20,10 +20,10 @@ var paintBucketApp = (function () {
     swatchStartY = 19,
     swatchImageWidth = 93,
     swatchImageHeight = 46,
-    drawingAreaX = 70,
-    drawingAreaY = 20,
-    drawingAreaWidth = 700,
-    drawingAreaHeight = 500,
+    drawingAreaX = 0,
+    drawingAreaY = 0,
+    drawingAreaWidth = 800,
+    drawingAreaHeight = 515,
     colorLayerData,
     outlineLayerData,
     totalLoadResources = 3,
@@ -291,7 +291,7 @@ var paintBucketApp = (function () {
         colorLayerData = context.getImageData(0, 0, canvasWidth, canvasHeight);
         resourceLoaded();
       };
-      outlineImage.src = "/assets/lattice15.png";
+      outlineImage.src = "/assets/lattice11_border.png";
     };
 
   return {
