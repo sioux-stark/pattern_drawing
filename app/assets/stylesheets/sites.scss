@@ -1,11 +1,23 @@
 // Place all the styles related to the sites controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-#home_look{
+.tile_background{
+  width: 100%;
+  height: 100% !important;
+  min-height:100%;
   background:url(background05.png) no-repeat center center fixed;
-  background-size: cover;
-  height:100%;
-  width:100%;
+  background-size: cover; 
+}
+
+#home_look {
+  width: 100%;
+  height: 100% !important;
+  text-align: center;
+  margin: 0 auto;
+   
+   // background-color: rgb(236, 240, 241);
+  
+  
   padding-top: 10px;
   padding-left: 30px;
 
@@ -14,16 +26,27 @@
 .navbar-inverse{
   background-color: rgb(236, 240, 241);
   border:none;
-  min-height: 50px;
+  min-height: 30px;
   border-radius:0px;
 
 }
 
-#canvasDiv{
-  background-color:white;
 
-}
 
 .navbar {
   margin-bottom: 0px;
+}
+
+.button_home{
+  text-align: center;
+  margin: 0 auto;
+}
+
+.home{
+  display: flex;
+  flex-direction: row;
+
+   
+
+
 }

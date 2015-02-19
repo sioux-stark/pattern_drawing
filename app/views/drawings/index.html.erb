@@ -1,5 +1,18 @@
-<h1>Drawings#index</h1>
-<p>Find me in app/views/drawings/index.html.erb</p>
-<% @drawings.each do |drawing| %>
-<img src= "<%= drawing.drawing %>">
-<% end %>
+
+<body class="color_background">
+<div class="container-fluid">
+    <div class="row">
+      <div class="drawing_left">
+        <% @drawings.each_with_index do | drawing, index | %>
+        <% if index % 2 != 0 || index % 2 == 0 %>
+          <div class="col-md-6">
+            <img src= "<%= drawing.drawing %>" id="photo">
+          </div>
+        
+        <% end %>
+        <% end %>
+    
+    
+  </div>
+</div>
+</body>

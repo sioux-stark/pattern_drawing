@@ -3,15 +3,16 @@ Rails.application.routes.draw do
 
  resources :users
  get "/login", to: "sessions#new"
+ get "/about", to: "sites#about"
 
-  post "/sessions", to: "sessions#create"
+ post "/sessions", to: "sessions#create"
 
-  get "/sign_up", to: "users#new", as: "sign_up"
+ get "/sign_up", to: "users#new", as: "sign_up"
 
-  resources :users
-  get "/drawings", to: "drawings#index"
+ resources :users
+ get "/drawings", to: "drawings#index"
 
-post "/drawings", to: "drawings#create"
+ post "/drawings", to: "drawings#create"
 
  get "/sign_up", to: "users#new"
  get "/login", to: "sessions#new"
