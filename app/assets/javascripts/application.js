@@ -14,7 +14,7 @@
 // //= require jquery_ujs
 
 
-// //= require canvas.js
+// //= require canvas.js.erb
 // //= require drawings.js
 // //= require modernizr.js
 // //= require_tree .
