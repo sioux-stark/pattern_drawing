@@ -30,12 +30,9 @@ var paintBucketApp = (function () {
     curLoadResNum = 0,
 
     // Clears the canvas.
-    // clearCanvas = function () {
+    // clearCanvas = function () 
 
-    //  context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-    // },
-
-    // Draw a color swatch
+  
     drawColorSwatch = function (color, x, y) {
 
       context.beginPath();
@@ -51,20 +48,18 @@ var paintBucketApp = (function () {
       }
     },
 
-    // Draw the elements on the canvas
+   
     redraw = function () {
 
       var locX,
         locY;
 
-      // Make sure required resources are loaded before redrawing
+      
       if (curLoadResNum < totalLoadResources) {
         return;
       }
 
-      // clearCanvas();
-
-      // Draw the current state of the color layer to the canvas
+    
       context.putImageData(colorLayerData, 0, 0);
 
       // Draw the background
