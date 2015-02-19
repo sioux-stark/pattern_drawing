@@ -3,8 +3,6 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 .tile_background{
   width: 100%;
-  height: 100% !important;
-  min-height:100%;
   background:url(background05.png) no-repeat center center fixed;
   background-size: cover; 
 }
@@ -37,16 +35,52 @@
   margin-bottom: 0px;
 }
 
-.button_home{
-  text-align: center;
-  margin: 0 auto;
-}
+
 
 .home{
   display: flex;
   flex-direction: row;
-
-   
-
-
+  margin-left:170px;
+  margin-top:50px;
+  padding-right:20px;
 }
+
+#canvasDiv{
+  margin-left: 10px;
+  padding-bottom: 40px;
+  padding-left: 20px;
+}
+
+
+li {
+  display:inline;
+}
+.message{
+  top:15px;
+  left: 15px;
+  color: #AA915C;
+}
+#color{
+  height: 30px;
+  width: 90px;
+}
+#save{
+  border:none;
+  background-color: rgb(236, 240, 241);
+  color: #AA915C;
+  font-size: 13px;
+  margin-top: 15px;
+   height: 30px;
+  width: 90px;
+}
+
+#restart{
+  border:none;
+  background-color: rgb(236, 240, 241);
+  color: #AA915C;
+  font-size: 13px;
+  margin-top: 15px;
+   height: 30px;
+  width: 90px;
+}
+

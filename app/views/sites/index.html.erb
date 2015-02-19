@@ -1,14 +1,22 @@
+
+
 <body class="tile_background">
   <nav class="navbar navbar-inverse">
   <ul class="nav navbar-nav">
     <li><a href="/about">about</a></li>
+    <li><a href="/drawings">pattern</a></li>
+    <li class="message"> an infinite pattern that extends beyond the visible material world </li>
   </ul>
 </nav>
 <div class="home">
   <div id="tools">
     <input type="color" id="color" onchange="setColor(value)" />
     <br>
-      <button id="save"> save </button>
+    
+    <button id="restart" onClick="window.location.reload()"> Restart</button>
+     
+    <br>
+      <button id="save"> Add Pattern </button>
   </div>
   <div id="canvasDiv">
   </div>
@@ -17,5 +25,31 @@
 </body>
 
 
- 
+
+
+<!-- Bootstrap version; has problems with canvas xy canvasDiv streches across page -->
+
+<!-- <body class="tile_background">
+  <nav class="navbar navbar-inverse">
+  <ul class="nav navbar-nav">
+    <li><a href="/about">about</a></li>
+    <li><a href="/drawings">pattern</a></li>
+    <li class="message"> an infinite pattern that extends beyond the visible material world </li>
+  </ul>
+</nav>
+
+<div class="container">
+  <div class="row">
+    <div class="col-xs-2 col-md-2 col-lg-2">
+    <input type="color" id="color" onchange="setColor(value)" />
+    <br>
+      <button id="save"> save </button>
+  </div>
+  <div class="col-xs-10 col-md-10 col-lg-10">
+  <div id="canvasDiv">
+  </div>
+      
+</div>
+</body> -->
+
 
