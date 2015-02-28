@@ -248,6 +248,7 @@ var paintBucketApp = (function () {
       swatchImage.src = "<%= asset_path('paint-outline.png') %>";
 
       outlineImage.onload = function () {
+        
         context.drawImage(outlineImage, drawingAreaX, drawingAreaY, drawingAreaWidth, drawingAreaHeight);
 
         
